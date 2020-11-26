@@ -1,0 +1,92 @@
+/**
+ * Developed by Michal Goly on the 20/04/2016
+ */
+
+body {
+    background-color: aqua;
+}
+
+#wrapper {
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border: 5px solid #000000;
+}
+
+#menu-page,
+#about-page,
+#menu-level-page,
+#canvas,
+#game-over-box {
+    position: absolute;
+    background: url("../asset/blueBig.png");
+    color: #f52004;
+    width: 800px;
+    height: 600px;
+    text-align: center;
+    font-family: serif;
+}
+
+h1 {
+    font-size: 3.8em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    font-size: 2em;
+}
+
+#about-page li,
+#about-page p {
+    margin: 5px;
+}
+
+#about-page ul {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #f52004;
+}
+
+a:visited {
+    color: #f52004;
+}
+
+a:hover {
+    color: #000000;
+}
+
+.light-grey {
+    color: #f2f2f2;
+}
+
+.back-button {
+    font-size: 1.3em;
+}
+
+#exit-button {
+    background-color: #00f2e5;
+    color: #f2f2f2;
+    border: none;
+    padding: 12px 22px;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+#name-field {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1.3em;
+}
+
+#game-over-p {
+    font-size: 1.3em;
+}
