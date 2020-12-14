@@ -51,12 +51,16 @@
                 };
                 var geseran = 5;
 
+                /* -- citra-citra bitmap diload di sini jika ada -- */
+                var gambarHati = new Image();
+                var musuh = new Image();
+                gambarHati.src = "heart.png";
+                musuh.src = "musuh.png";
+                var darah = 3;
+
                 
                 /* -- struktur data objek peluru, meniru dari bola -- */
                 var jarijaripeluru = 5;
-                var coba;
-                var cobaLagi;
-                var guntur;
                 var peluru = [];
                 function buatpeluru(xbola,ybola,sawal,offset,maju){
                     //wawal = "#"+((1<<24)*Math.random()|0).toString(16);
@@ -88,7 +92,6 @@
                 var UP = false; 
                 var DOWN = false;
                 function move() {
-                    
                     if(LEFT) { 
                         bola.x -= geseran;
                         if (bola.x <= 20){
@@ -103,6 +106,7 @@
                     }
                     if(UP) { 
                         bola.y -= geseran;
+
                         if (bola.y <= 300){
                             bola.y = 300;	
                         }
@@ -130,16 +134,33 @@
                     if(e.keyCode == 39) RIGHT = false;
                 }
 
+                var musuhY1 = 40;
+                var musuhY2 = 100;
+
+
                 /* -- penggambaran dinamis -- */
                 function gambarkan(){
+                    context.clearRect(0,0,800,600);
+                    
+                    context.drawImage(musuh, 100, musuhY1, 50, 50); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                    context.drawImage(musuh, 200, musuhY2, 50, 50); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                    context.drawImage(musuh, 300, musuhY1, 50, 50); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                    context.drawImage(musuh, 400, musuhY2, 50, 50); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                    context.drawImage(musuh, 500, musuhY1, 50, 50); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                    context.drawImage(musuh, 600, musuhY2, 50, 50); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                    context.drawImage(musuh, 700, musuhY1, 50, 50); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                    
                     move();
                     if(counter >= fireRate){
                         buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(5)),-jarijaribola-5);
                         counter =0;
                     }
-                    context.clearRect(0,0,800,600);
                     /* background dst masuk sini */
-
+                    var posisi = 760;
+                    for(i=0;i<darah;i++){
+                        context.drawImage(gambarHati, posisi, 15, 25, 25); //ctx.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                        posisi-=35;
+                    }
                     /*--- Bagian bola dan cucuk ---*/
 
                     context.save();
@@ -221,6 +242,8 @@
                         }
                     }
                     counter++;
+                    musuhY1+=0.3;
+                    musuhY2+=0.3;
                 }
 
                 setInterval(gambarkan, 20);
