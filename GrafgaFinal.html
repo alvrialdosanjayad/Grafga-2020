@@ -39,19 +39,19 @@
                 game.newGame();
                 
                 var jarijaribola = 20;
-                xawal = Math.floor(Math.random() * (800-(2*jarijaribola))) + jarijaribola;
-                yawal = Math.floor(Math.random() * (600-(2*jarijaribola))) + jarijaribola;
                 wawal = "#"+((1<<24)*Math.random()|0).toString(16);
-                sawal = Math.random() * 2;
                 var bola = {
-                    x: xawal,
-                    y: yawal,
+                    x: 400,
+                    y: 580,
                     warna: wawal,
-                    sudut: sawal,
+                    sudut: 0,
                     offset: 0,
                     jarijari: jarijaribola,
                     nyawa: 255
                 };
+                var geseran = 5;
+
+                
                 /* -- struktur data objek peluru, meniru dari bola -- */
                 var jarijaripeluru = 5;
                 var coba;
@@ -71,6 +71,9 @@
                     peluru.push(pelor);
                 }
 
+                var fireRate = 20;
+                var counter = 0;
+
                 /* -- fungsi jarak Euclidean --*/
                 function euDist(objek1, objek2){
                     jarak = Math.sqrt(Math.pow(objek1.x-objek2.x,2) + Math.pow(objek1.y-objek2.y,2));
@@ -80,48 +83,60 @@
                 /* -- nilai awal -- */
 
                 /* -- deteksi keyboard -- */
-                window.addEventListener("keydown", keydn, true);
-                window.addEventListener("keyup", keyup, true);
-                var yangDipencet = {};
-                function keydn(e){
-                    //Multi-pencet, keyCode tuts keyboard yang dipencet menjadi indeks array dengan isi elemen TRUE
-                    yangDipencet[e.keyCode] = true;
-                    //Bola0				
-                    //arah atas
-                    if(yangDipencet[38]==true) {
-                        bola.offset--;
-                    };
-                    //arah bawah
-                    if(yangDipencet[40]==true) {
-                        bola.offset++;
-                    };
-                    //arah kiri
-                    if(yangDipencet[37]==true) { 
-                        bola.sudut = bola.sudut - 0.05;
-                        if(bola.sudut<=0){
-                            bola.sudut=2;
+                var LEFT = false; 
+                var RIGHT = false;
+                var UP = false; 
+                var DOWN = false;
+                function move() {
+                    
+                    if(LEFT) { 
+                        bola.x -= geseran;
+                        if (bola.x <= 20){
+                            bola.x = 20;	
                         }
-                    };
-                    //arah kanan
-                    if(yangDipencet[39]==true) { 
-                        bola.sudut = bola.sudut + 0.05;
-                        if(bola.sudut>=2){
-                            bola.sudut=0;
+                    }
+                    if(RIGHT) {
+                        bola.x += geseran;
+                        if (bola.x >= 780){
+                            bola.x = 780;	
                         }
-                    };
-                    //tembak enter
-                    if(yangDipencet[32]==true) {
-                        buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(bola.offset)),-jarijaribola-5);
-                    };
-    
+                    }
+                    if(UP) { 
+                        bola.y -= geseran;
+                        if (bola.y <= 300){
+                            bola.y = 300;	
+                        }
+                    }
+                    if(DOWN) {
+                        bola.y += geseran;
+                        if (bola.y >= 580){
+                            bola.y = 580;	
+                        }	
+                    }
+                    
                 }
-                function keyup(e){
-                    delete yangDipencet[e.keyCode];
-                    //yangDipencet[e.keyCode]=false;
+
+                document.onkeydown = function(e) {
+                    if(e.keyCode == 38) UP = true;
+                    if(e.keyCode == 40) DOWN = true;
+                    if(e.keyCode == 37) LEFT = true;
+                    if(e.keyCode == 39) RIGHT = true;
+                }
+
+                document.onkeyup = function(e) {
+                    if(e.keyCode == 38) UP = false;
+                    if(e.keyCode == 40) DOWN = false;
+                    if(e.keyCode == 37) LEFT = false;
+                    if(e.keyCode == 39) RIGHT = false;
                 }
 
                 /* -- penggambaran dinamis -- */
                 function gambarkan(){
+                    move();
+                    if(counter >= fireRate){
+                        buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(5)),-jarijaribola-5);
+                        counter =0;
+                    }
                     context.clearRect(0,0,800,600);
                     /* background dst masuk sini */
 
@@ -202,12 +217,14 @@
                                     shot=true;
                                 }
                             }
-        
                             context.restore();
                         }
                     }
+                    counter++;
                 }
+
                 setInterval(gambarkan, 20);
+                
             });
 
             $("#about-button").click(function() {
