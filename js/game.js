@@ -14,7 +14,6 @@ Game.prototype.newGame = function() {
     this.background = new Background(this.canvas, this.assetsManager);
     this.background.draw(this.context);
 
-
 };
 
 
