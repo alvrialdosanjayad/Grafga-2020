@@ -9,13 +9,12 @@
 
     <link rel="stylesheet" href="css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/background.js"></script>
-    <script src="js/assetsManager.js"></script>
 
     <script>
-        
+
         $(document).ready(function () {
+
+            document.getElementById("myAudio").autoplay = true;
 
 
             $("#about-page").hide();
@@ -45,7 +44,7 @@
 
                 /* -- Citra gmabar darah -- */
                 var gambarHati = new Image();
-                gambarHati.src = "heart.png";
+                gambarHati.src = "asset/heart.png";
 
                 /* -- Peluru dalam bentuk bulat -- */
                 var jarijaripeluru = 5;
@@ -68,7 +67,7 @@
                     pelor = {
                         x: xbola + 0*Math.cos(sawal * Math.PI)-maju*Math.sin(sawal * Math.PI),
                         y: ybola + 0*Math.sin(sawal * Math.PI)+maju*Math.cos(sawal *Math.PI),
-                        warna: "#00aa00",
+                        warna: "#7872ed",
                         sudut: sawal,
                         offset: offset
                     };
@@ -175,7 +174,7 @@
 
                 var fireRate = 15;
                 var counter = 0;
-                var fireRateMusuh = 45;
+                var fireRateMusuh = 30;
                 var counterMusuh = 0;
                 var sisaMusuh1 = jumlahBola;
                 var sisaMusuh2 = jumlahBola2;
@@ -191,7 +190,8 @@
                         
                     }
                 }
-    
+                var level1=1;
+                var level2=2;
 
                 /* -- penggambaran dinamis -- */
                 function gambarkan(){
@@ -202,6 +202,9 @@
                     context.fillStyle="#f21202";
                     context.fillText(skor,10,30);
                     
+                    context.font = "bold 20px Arial";
+                    context.fillStyle="#ffffff";
+                    context.fillText("Level : "+level1,365,23);
 
                     if(counter >= fireRate){
                         buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(5)),-bola.jarijari-5);
@@ -352,6 +355,10 @@
                     context.font = "bold 30px Arial";
                     context.fillStyle="#f21202";
                     context.fillText(skor,10,30);
+
+                    context.font = "bold 20px Arial";
+                    context.fillStyle="#ffffff";
+                    context.fillText("Level : "+level2,365,23);
 
                     if(counter >= fireRate){
                         buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(5)),-bola.jarijari-5); 
@@ -515,7 +522,7 @@
                     }else if(bola.darah == 0){
                         context.font = "bold 30px Arial";
                         context.fillStyle="#f21202";
-                        context.fillText("Game Over",140,300);
+                        context.fillText("Game Over",320,300);
                         context.fillText("Skor Akhir : "+skor,290,350);
                         canvas.addEventListener("mousedown", mousedn, true);
                         function mousedn(e){
@@ -560,6 +567,10 @@
     </script>
 </head>
 <body>
+    <audio id="myAudio" autoplay>
+        <source src="musik.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <div id="wrapper">
         <div id="menu-page">
             <h1>Deadly Shooter 2020</h1>
@@ -570,13 +581,12 @@
         </div>
         <div id="about-page">
             <h1>Nama Kelompok</h1>
-            <a class="back-button" href="#">Menu</a>
+            <a class="back-button" href="#">Menu</a>    
             <h2>71170192 - Guntur Nawak Sara Tumakaka</h2>
             <h2>71170230 - Alvrialdo Sanjaya Dese</h2>
             <h2>71170230 - Hingga KrisKurniawan</h2>
-            <p>
-                Game ini sangat baik mahasiswa yang bosan dan merasa jomblo!
-            </p>
+            <h2>Game ini sebagai tugas akhir dari matakuliah Grafika Game</h2>
+            
         </div>
         <canvas id="canvas" width="800" height="600">
             Your web browser does not support a canvas

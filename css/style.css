@@ -3,7 +3,7 @@
  */
 
 body {
-    background-color: aqua;
+    background-color: rgb(141, 182, 182);
 }
 
 #wrapper {
@@ -22,10 +22,11 @@ body {
 #about-page,
 #menu-level-page,
 #canvas,
+
 #game-over-box {
     position: absolute;
     background: url("../asset/blueBig.png");
-    color: #f52004;
+    color: #51c25f;
     width: 800px;
     height: 600px;
     text-align: center;
