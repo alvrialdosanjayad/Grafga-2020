@@ -16,7 +16,7 @@
     <script>
         
         $(document).ready(function () {
-            var skor = 0;
+
 
             $("#about-page").hide();
             $("#canvas").hide();
@@ -29,6 +29,7 @@
                 $("#menu-page").hide();
                 var canvas = document.getElementById("canvas");
                 var context = canvas.getContext("2d");
+                var skor = 0;
 
                 /* -- player -- */
                 var bola = {
@@ -159,7 +160,21 @@
 
                 var fireRate = 15;
                 var counter = 0;
+                var sisaMusuh1 = jumlahBola;
+                var sisaMusuh2 = jumlahBola2;
                 var intervalCanvas = setInterval(gambarkan, 20);
+
+                function musuhLewat() {
+                    for(i=1;i<=jumlahBola;i++){
+                        if(musuh[i].y > 620){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                        
+                    }
+                }
+    
 
                 /* -- penggambaran dinamis -- */
                 function gambarkan(){
@@ -228,11 +243,18 @@
                             context.fillStyle = musuh[i].warna;
                             context.fill();
                             context.restore();
-                            musuh[i].y += 0.3;
+                            musuh[i].y += 1;
+                            jb1=euDist(bola,musuh[i]);
+                            if(jb1<=(musuh[i].jarijari+bola.jarijari )){
+                                bola.darah--;
+                                musuh[i].jarijari = -100;
+                                musuh[i].keadaan = "tewas";
+                                sisaMusuh1--;                  
+                            }
                         }
                     }
 
-                    if(skor < 30){
+                    if(bola.darah > 0 && sisaMusuh1 > 0 && !musuhLewat()){
                         move();
                         /*--- Bagian peluru ---*/
                         if(peluru.length>0){
@@ -263,23 +285,43 @@
                                             shot=true;
                                             skor += 30;
                                             musuh[j].keadaan = "tewas";
+                                            sisaMusuh1--;
                                         }
                                     }
                                 }
                                 context.restore();
                             }
                         }
-                    }else{
+                    }
+                    if(musuhLewat() || bola.darah == 0){
                         context.font = "bold 30px Arial";
                         context.fillStyle="#f21202";
-                        // context.fillText("Game Over",320,300);
+                        context.fillText("Game Over",320,300);
+                        context.fillText("Klik untuk exit",300,350);
+                        context.fillText("Skor Akhir : "+skor,290,400);
+                        canvas.addEventListener("mousedown", mousedn, true);
+                        function mousedn(e){
+                            clearInterval(intervalCanvas);
+                            $("#about-page").hide();
+                            $("#canvas").hide();
+                            $("#menu-page").show();
+			            }
+                    
+                    }if(sisaMusuh1 == 0 ){
+                        context.font = "bold 30px Arial";
+                        context.fillStyle="#f21202";
                         context.fillText("Klik To Next Level",270,350);
                         canvas.addEventListener("mousedown", mousedn, true);
                         function mousedn(e){
                             clearInterval(intervalCanvas);
                             intervalCanvas = setInterval(gambarkan2,20);
-                                bola.x = 400;
-                                bola.y = 580;
+                            bola.x = 400;
+                            bola.y = 580;
+                            bola.darah = 3;
+                            peluru = [];
+                            $("#about-page").hide();
+                            $("#canvas").show();
+                            $("#menu-page").hide();
 			            }
                     }
                     counter++;  
@@ -349,10 +391,17 @@
                             context.fillStyle = musuh2[i].warna;
                             context.fill();
                             context.restore();
+                            jb1=euDist(bola,musuh2[i]);
+                            if(jb1<=(musuh2[i].jarijari+bola.jarijari )){
+                                bola.darah--;
+                                musuh2[i].jarijari = -100;
+                                musuh2[i].keadaan = "tewas";
+                                sisaMusuh2--;                  
+                            }
                         }
                     }
 
-                    if(skor < 60){
+                    if(sisaMusuh2 > 0 && bola.darah > 0){
                         move();
                         /*--- Bagian peluru ---*/
                         if(peluru.length>0){
@@ -383,6 +432,7 @@
                                             shot=true;
                                             skor += 30;
                                             musuh2[j].keadaan = "tewas";
+                                            sisaMusuh2--;
                                         }
                                     }
                                 }
