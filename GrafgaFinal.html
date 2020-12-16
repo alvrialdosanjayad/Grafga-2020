@@ -512,6 +512,18 @@
                                 context.restore();
                             }
                         }
+                    }else if(bola.darah == 0){
+                        context.font = "bold 30px Arial";
+                        context.fillStyle="#f21202";
+                        context.fillText("Game Over",140,300);
+                        context.fillText("Skor Akhir : "+skor,290,350);
+                        canvas.addEventListener("mousedown", mousedn, true);
+                        function mousedn(e){
+                            clearInterval(intervalCanvas);
+                            $("#about-page").hide();
+                            $("#canvas").hide();
+                            $("#menu-page").show();
+			            } 
                     }else{
                         context.font = "bold 30px Arial";
                         context.fillStyle="#f21202";
@@ -521,9 +533,9 @@
                         canvas.addEventListener("mousedown", mousedn, true);
                         function mousedn(e){
                             clearInterval(intervalCanvas);
-                            intervalCanvas = setInterval(gambarkan2,20);
-                                bola.x = 400;
-                                bola.y = 580;
+                            $("#about-page").hide();
+                            $("#canvas").hide();
+                            $("#menu-page").show();
 			            }
                     }
                     counter++;
