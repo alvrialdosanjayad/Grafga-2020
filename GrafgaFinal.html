@@ -327,6 +327,8 @@
                     counter++;  
                 }
 
+                var perpindahan = 3;
+
                 function gambarkan2() {
                     context.clearRect(0,0,800,600);
                     context.font = "bold 30px Arial";
@@ -391,6 +393,16 @@
                             context.fillStyle = musuh2[i].warna;
                             context.fill();
                             context.restore();
+
+
+                            musuh2[i].x -= perpindahan;
+                            if(musuh2[1].x <=20){
+                                perpindahan = -3;
+                            }
+                            if(musuh2[7].x >=780){
+                                perpindahan = 3;
+                            }
+
                             jb1=euDist(bola,musuh2[i]);
                             if(jb1<=(musuh2[i].jarijari+bola.jarijari )){
                                 bola.darah--;
@@ -399,17 +411,6 @@
                                 sisaMusuh2--;                  
                             }
                             
-                            if(i%2==0){
-                                musuh2[i].x -=0.7;
-                                if(musuh2[i].x <=20){
-                                    musuh2[i].x += 1;
-                                }
-                            }else{
-                                musuh2[i].x +=0.7;
-                                if(musuh2[i].x >=780){
-                                    musuh2[i].x -=0.7;
-                                }
-                            }
                         }
                     }
 
