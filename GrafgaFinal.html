@@ -358,13 +358,11 @@
                         counter = 0;
                     }
                     if(counterMusuh >=fireRateMusuh){
-                        buatpeluru2(musuh2[1].x,musuh2[1].y,musuh2[1].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
-                        buatpeluru2(musuh2[2].x,musuh2[2].y,musuh2[2].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
-                        buatpeluru2(musuh2[3].x,musuh2[3].y,musuh2[3].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
-                        buatpeluru2(musuh2[4].x,musuh2[4].y,musuh2[4].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
-                        buatpeluru2(musuh2[5].x,musuh2[5].y,musuh2[5].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
-                        buatpeluru2(musuh2[6].x,musuh2[6].y,musuh2[6].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
-                        buatpeluru2(musuh2[7].x,musuh2[7].y,musuh2[7].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
+                        for(i=1;i<=jumlahBola2;i++){
+                            if(musuh2[i].keadaan == "hidup"){
+                                buatpeluru2(musuh2[i].x,musuh2[i].y,musuh2[i].sudut,-(1+Math.abs(5)),-bola.jarijari-5);
+                            }
+                        }
                         counterMusuh = 0
                     }
 
@@ -503,14 +501,11 @@
                                 shot=false;
                                 for(j=1;j<=7;j++){
                                     if(shot==false){
-                                        jb0=euDist(peluru2[i],musuh2[j]);
-                                        if(jb0<=(musuh2[j].jarijari+jarijaripeluru)){
-                                            musuh2[j].jarijari = -100;
+                                        jb2=euDist(peluru2[i],bola);
+                                        if(jb2<=(bola.jarijari+jarijaripeluru)){
                                             peluru2.splice(i,1);	
                                             shot=true;
-                                            skor += 30;
-                                            sisaMusuh2--;
-                                            musuh2[j].keadaan = "tewas";
+                                            bola.darah--;
                                         }
                                     }
                                 }
