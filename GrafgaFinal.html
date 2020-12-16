@@ -16,26 +16,21 @@
     <script>
         
         $(document).ready(function () {
+            var skor = 0;
+
             $("#about-page").hide();
             $("#canvas").hide();
-            $("#game-over-box").hide();
-            $("#menu-level-page").hide();
+            $("#menu-page").show();
+
 
             $("#start-game-button").click(function() {
-                $("#menu-page").hide();
-                $("#game-over-box").hide();
-                $("#menu-level-page").show();
-            });
-
-            $("#level-1").click(function() {
-                $("#menu-page").hide();
-                $("#game-over-box").hide();
-                $("#menu-level-page").hide();
+                $("#about-page").hide();
                 $("#canvas").show();
-
+                $("#menu-page").hide();
                 var canvas = document.getElementById("canvas");
                 var context = canvas.getContext("2d");
-                
+
+                /* -- player -- */
                 var bola = {
                     x: 400,
                     y: 580,
@@ -47,16 +42,14 @@
                     speed: 5
                 };
 
-                /* -- citra-citra bitmap diload di sini jika ada -- */
+                /* -- Citra gmabar darah -- */
                 var gambarHati = new Image();
                 gambarHati.src = "heart.png";
 
-                /* -- struktur data objek peluru, meniru dari bola -- */
+                /* -- Peluru dalam bentuk bulat -- */
                 var jarijaripeluru = 5;
                 var peluru = [];
                 function buatpeluru(xbola,ybola,sawal,offset,maju){
-                    //wawal = "#"+((1<<24)*Math.random()|0).toString(16);
-                    //sawal = Math.random() * 2;
                     pelor = {
                         x: xbola + 0*Math.cos(sawal * Math.PI)-maju*Math.sin(sawal * Math.PI),
                         y: ybola + 0*Math.sin(sawal * Math.PI)+maju*Math.cos(sawal *Math.PI),
@@ -67,13 +60,12 @@
                     peluru.push(pelor);
                 }
 
-                var fireRate = 20;
-                var counter = 0;
-                var jarijaribola = 20;
+                /* -- Gambar musuh level 1 -- */
+                var jumlahBola = 7;
                 var musuh = new Array;
                 var xMusuh = 100;
                 var yMusuh = 100;
-                for(var i=1; i<=7; i++){
+                for(var i=1; i<=jumlahBola; i++){
                     musuh[i] = {
                         x: xMusuh,
                         y: yMusuh,
@@ -86,6 +78,27 @@
                         yMusuh += 50;
                     }else{
                         yMusuh -= 50;
+                    }
+                };
+
+                /* -- Gambar musuh level 2 -- */
+                var jumlahBola2 = 7;
+                var musuh2 = new Array;
+                var xMusuh2 = 100;
+                var yMusuh2 = 100;
+                for(var i=1; i<=jumlahBola2; i++){
+                    musuh2[i] = {
+                        x: xMusuh2,
+                        y: yMusuh2,
+                        warna: "#7872ed",
+                        jarijari: 20,
+                        keadaan: "hidup"
+                    }
+                    xMusuh2 += 100;
+                    if(i%2==1){
+                        yMusuh2 += 50;
+                    }else{
+                        yMusuh2 -= 50;
                     }
                 };
 
@@ -144,87 +157,83 @@
                     if(e.keyCode == 39) RIGHT = false;
                 }
 
-                var skor = 0;
-                var jumlahBola = 7;
+                var fireRate = 15;
+                var counter = 0;
+                var intervalCanvas = setInterval(gambarkan, 20);
 
                 /* -- penggambaran dinamis -- */
                 function gambarkan(){
                     
-                        context.clearRect(0,0,800,600);
+                    context.clearRect(0,0,800,600);
                         
-                        context.font = "bold 30px Arial";
-                        context.fillStyle="#f21202";
-                        context.fillText(skor,10,30);
-                        
-
-                        if(counter >= fireRate){
-                            buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(5)),-bola.jarijari-5);
-                            counter =0;
-                        }
-                        /* background dst masuk sini */
-                        var posisi = 760;
-                        for(i=0;i<bola.darah;i++){
-                            context.drawImage(gambarHati, posisi, 15, 25, 25); //context.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
-                            posisi-=35;
-                        }
-                        /*--- Bagian bola dan cucuk ---*/
-
-                        context.save();
-
-                        /*--- Layer kalkulasi ---*/
-                        //update nilai geseran secara kontinu
-                        bola.x = bola.x + 0*Math.cos(bola.sudut * Math.PI)-bola.offset*Math.sin(bola.sudut * Math.PI);
-                        if(bola.x<(0+bola.jarijari)||bola.x>(800-bola.jarijari)){
-                                bola.offset=-bola.offset;
-                        }
-                        if(bola.y<(0+bola.jarijari)||bola.y>(600-bola.jarijari)){
-                                bola.offset=-bola.offset;
-                        }
-                        //geser kanvas sesuai posisi koordinat bola pada sumbu 	
-                        context.translate(bola.x, bola.y);
-                        //rotasi hadap bola	
-                        context.rotate(bola.sudut * Math.PI);
-
-                        /*--- Layer penggambaran ---*/	
-                        /* digambar bolanya */
-                        context.beginPath();
-                        context.arc(0,0,bola.jarijari,0,2*Math.PI, false);		//jari-jarinya 20
-                        context.closePath();
-                        context.fillStyle = bola.warna;
-                        context.fill();
-                        /* digambar cucuknya */
-                        context.beginPath();
-                        context.moveTo(0,-bola.jarijari);
-                        context.lineTo(10,-10);
-                        context.lineTo(-10,-10);
-                        context.closePath();
-                        context.fillStyle = "#ffff00";
-                        context.strokeStyle="#666666";
-                        context.stroke();
-                        context.fill();
-                        context.restore();
+                    context.font = "bold 30px Arial";
+                    context.fillStyle="#f21202";
+                    context.fillText(skor,10,30);
                     
 
-                        for(i=1;i<=7;i++){
+                    if(counter >= fireRate){
+                        buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(5)),-bola.jarijari-5);
+                        counter = 0;
+                    }
+                    /* background dst masuk sini */
+                    var posisi = 760;
+                    for(i=0;i<bola.darah;i++){
+                        context.drawImage(gambarHati, posisi, 15, 25, 25); //context.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                        posisi-=35;
+                    }
+                    /*--- Bagian bola dan cucuk ---*/
+                    context.save();
+                    /*--- Layer kalkulasi ---*/
+                    //update nilai geseran secara kontinu
+                    bola.x = bola.x + 0*Math.cos(bola.sudut * Math.PI)-bola.offset*Math.sin(bola.sudut * Math.PI);
+                    if(bola.x<(0+bola.jarijari)||bola.x>(800-bola.jarijari)){
+                            bola.offset=-bola.offset;
+                    }
+                    if(bola.y<(0+bola.jarijari)||bola.y>(600-bola.jarijari)){
+                            bola.offset=-bola.offset;
+                    }
+                    //geser kanvas sesuai posisi koordinat bola pada sumbu 	
+                    context.translate(bola.x, bola.y);
+                    //rotasi hadap bola	
+                    context.rotate(bola.sudut * Math.PI);
 
-                            if(musuh[i].keadaan == 'hidup'){
-                                //geser kanvas sesuai posisi koordinat bola pada sumbu 	
-                                context.save();
-                                context.translate(musuh[i].x, musuh[i].y);
-                                /* digambar bolanya */
-                                context.beginPath();
-                                context.arc(0,0,musuh[i].jarijari,0,2*Math.PI, false);		//jari-jarinya 20
-                                context.closePath();
-                                context.fillStyle = musuh[i].warna;
-                                context.fill();
-                                context.restore();
-                                musuh[i].y += 0.3;
-                            }
-
+                    /*--- Layer penggambaran ---*/	
+                    /* digambar bolanya */
+                    context.beginPath();
+                    context.arc(0,0,bola.jarijari,0,2*Math.PI, false);		//jari-jarinya 20
+                    context.closePath();
+                    context.fillStyle = bola.warna;
+                    context.fill();
+                    /* digambar cucuknya */
+                    context.beginPath();
+                    context.moveTo(0,-bola.jarijari);
+                    context.lineTo(10,-10);
+                    context.lineTo(-10,-10);
+                    context.closePath();
+                    context.fillStyle = "#ffff00";
+                    context.strokeStyle="#666666";
+                    context.stroke();
+                    context.fill();
+                    context.restore();
+                    
+                    for(i=1;i<=jumlahBola;i++){
+                        if(musuh[i].keadaan == 'hidup'){
+                            //geser kanvas sesuai posisi koordinat bola pada sumbu 	
+                            context.save();
+                            context.translate(musuh[i].x, musuh[i].y);
+                            /* digambar bolanya */
+                            context.beginPath();
+                            context.arc(0,0,musuh[i].jarijari,0,2*Math.PI, false);		//jari-jarinya 20
+                            context.closePath();
+                            context.fillStyle = musuh[i].warna;
+                            context.fill();
+                            context.restore();
+                            musuh[i].y += 0.3;
                         }
+                    }
 
-                        if(skor < 210){
-                            move();
+                    if(skor < 30){
+                        move();
                         /*--- Bagian peluru ---*/
                         if(peluru.length>0){
                             for(i=0;i<peluru.length;i++){
@@ -245,128 +254,172 @@
 
                                 /* -- Collision detection -- */
                                 shot=false;
-                                
-                                if(shot==false){
-                                    jb0=euDist(peluru[i],musuh[1]);
-                                    if(jb0<=(musuh[1].jarijari+jarijaripeluru)){
-                                        musuh[1].jarijari = -100;
-                                        peluru.splice(i,1);	
-                                        shot=true;
-                                        skor += 30;
-                                        musuh[1].keadaan = "tewas";
+                                for(j=1;j<=7;j++){
+                                    if(shot==false){
+                                        jb0=euDist(peluru[i],musuh[j]);
+                                        if(jb0<=(musuh[j].jarijari+jarijaripeluru)){
+                                            musuh[j].jarijari = -100;
+                                            peluru.splice(i,1);	
+                                            shot=true;
+                                            skor += 30;
+                                            musuh[j].keadaan = "tewas";
+                                        }
                                     }
                                 }
-                                if(shot==false){
-                                    jb0=euDist(peluru[i],musuh[2]);
-                                    if(jb0<=(musuh[2].jarijari+jarijaripeluru)){
-                                        musuh[2].jarijari = -100;
-                                        peluru.splice(i,1);	
-                                        shot=true;
-                                        skor += 30;
-                                        musuh[2].keadaan = "tewas";
-                                    }
-                                }
-                                if(shot==false){
-                                    jb0=euDist(peluru[i],musuh[3]);
-                                    if(jb0<=(musuh[3].jarijari+jarijaripeluru)){
-                                        musuh[3].jarijari = -100;
-                                        peluru.splice(i,1);	
-                                        shot=true;
-                                        skor += 30;
-                                        musuh[3].keadaan = "tewas";
-                                    }
-                                }
-                                if(shot==false){
-                                    jb0=euDist(peluru[i],musuh[4]);
-                                    if(jb0<=(musuh[4].jarijari+jarijaripeluru)){
-                                        musuh[4].jarijari = -100;
-                                        peluru.splice(i,1);	
-                                        shot=true;
-                                        skor += 30;
-                                        musuh[4].keadaan = "tewas";
-                                    }
-                                }
-                                if(shot==false){
-                                    jb0=euDist(peluru[i],musuh[5]);
-                                    if(jb0<=(musuh[5].jarijari+jarijaripeluru)){
-                                        musuh[5].jarijari = -100;
-                                        peluru.splice(i,1);	
-                                        shot=true;
-                                        skor += 30;
-                                        musuh[5].keadaan = "tewas";
-                                    }
-                                }
-                                if(shot==false){
-                                    jb0=euDist(peluru[i],musuh[6]);
-                                    if(jb0<=(musuh[6].jarijari+jarijaripeluru)){
-                                        musuh[6].jarijari = -100;
-                                        peluru.splice(i,1);	
-                                        shot=true;
-                                        skor += 30;
-                                        musuh[6].keadaan = "tewas";
-                                    }
-                                }
-                                if(shot==false){
-                                    jb0=euDist(peluru[i],musuh[7]);
-                                    if(jb0<=(musuh[7].jarijari+jarijaripeluru)){
-                                        musuh[7].jarijari = -100;
-                                        peluru.splice(i,1);	
-                                        shot=true;
-                                        skor += 30;
-                                        musuh[7].keadaan = "tewas";
-                                    }
-                                }
-                                
                                 context.restore();
                             }
                         }
-
                     }else{
-                        clearInterval(setInterval(gambarkan, 20));
                         context.font = "bold 30px Arial";
                         context.fillStyle="#f21202";
-                        context.fillText("Game Over",320,300);
-                        
+                        // context.fillText("Game Over",320,300);
+                        context.fillText("Klik To Next Level",270,350);
+                        canvas.addEventListener("mousedown", mousedn, true);
+                        function mousedn(e){
+                            clearInterval(intervalCanvas);
+                            intervalCanvas = setInterval(gambarkan2,20);
+                                bola.x = 400;
+                                bola.y = 580;
+			            }
                     }
-                        counter++;  
+                    counter++;  
                 }
-                setInterval(gambarkan, 20);
-                
+
+                function gambarkan2() {
+                    context.clearRect(0,0,800,600);
+                    context.font = "bold 30px Arial";
+                    context.fillStyle="#f21202";
+                    context.fillText(skor,10,30);
+
+                    if(counter >= fireRate){
+                        buatpeluru(bola.x,bola.y,bola.sudut,-(1+Math.abs(5)),-bola.jarijari-5);
+                        counter = 0;
+                    }
+
+                    var posisi = 760;
+                    for(i=0;i<bola.darah;i++){
+                        context.drawImage(gambarHati, posisi, 15, 25, 25); //context.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                        posisi-=35;
+                    }  
+
+                    /*--- Bagian bola dan cucuk ---*/
+                    context.save();
+                    /*--- Layer kalkulasi ---*/
+                    //update nilai geseran secara kontinu
+                    bola.x = bola.x + 0*Math.cos(bola.sudut * Math.PI)-bola.offset*Math.sin(bola.sudut * Math.PI);
+                    if(bola.x<(0+bola.jarijari)||bola.x>(800-bola.jarijari)){
+                            bola.offset=-bola.offset;
+                    }
+                    if(bola.y<(0+bola.jarijari)||bola.y>(600-bola.jarijari)){
+                            bola.offset=-bola.offset;
+                    }
+                    //geser kanvas sesuai posisi koordinat bola pada sumbu 	
+                    context.translate(bola.x, bola.y);
+                    //rotasi hadap bola	
+                    context.rotate(bola.sudut * Math.PI);
+
+                    /*--- Layer penggambaran ---*/	
+                    /* digambar bolanya */
+                    context.beginPath();
+                    context.arc(0,0,bola.jarijari,0,2*Math.PI, false);		//jari-jarinya 20
+                    context.closePath();
+                    context.fillStyle = bola.warna;
+                    context.fill();
+                    /* digambar cucuknya */
+                    context.beginPath();
+                    context.moveTo(0,-bola.jarijari);
+                    context.lineTo(10,-10);
+                    context.lineTo(-10,-10);
+                    context.closePath();
+                    context.fillStyle = "#ffff00";
+                    context.strokeStyle="#666666";
+                    context.stroke();
+                    context.fill();
+                    context.restore();
+
+                    for(i=1;i<=jumlahBola2;i++){
+                        if(musuh2[i].keadaan == 'hidup'){
+                            //geser kanvas sesuai posisi koordinat bola pada sumbu 	
+                            context.save();
+                            context.translate(musuh2[i].x, musuh2[i].y);
+                            /* digambar bolanya */
+                            context.beginPath();
+                            context.arc(0,0,musuh2[i].jarijari,0,2*Math.PI, false);		//jari-jarinya 20
+                            context.closePath();
+                            context.fillStyle = musuh2[i].warna;
+                            context.fill();
+                            context.restore();
+                        }
+                    }
+
+                    if(skor < 60){
+                        move();
+                        /*--- Bagian peluru ---*/
+                        if(peluru.length>0){
+                            for(i=0;i<peluru.length;i++){
+                                context.save();					
+                                /*--- Layer kalkulasi ---*/
+                                //update nilai geseran secara kontinu
+                                peluru[i].x = peluru[i].x + 0*Math.cos(peluru[i].sudut * Math.PI)-peluru[i].offset*Math.sin(peluru[i].sudut * Math.PI);
+                                peluru[i].y = peluru[i].y + 0*Math.sin(peluru[i].sudut * Math.PI)+peluru[i].offset*Math.cos(peluru[i].sudut *Math.PI);
+                                //geser kanvas sesuai posisi koordinat bola pada sumbu 	
+                                context.translate(peluru[i].x, peluru[i].y);
+                                /*--- Layer penggambaran ---*/	
+                                /* digambar pelurunya */
+                                context.beginPath();
+                                context.arc(0,0,jarijaripeluru,0,2*Math.PI, false);		
+                                context.closePath();
+                                context.fillStyle = peluru[i].warna;
+                                context.fill();
+
+                                /* -- Collision detection -- */
+                                shot=false;
+                                for(j=1;j<=7;j++){
+                                    if(shot==false){
+                                        jb0=euDist(peluru[i],musuh2[j]);
+                                        if(jb0<=(musuh2[j].jarijari+jarijaripeluru)){
+                                            musuh2[j].jarijari = -100;
+                                            peluru.splice(i,1);	
+                                            shot=true;
+                                            skor += 30;
+                                            musuh2[j].keadaan = "tewas";
+                                        }
+                                    }
+                                }
+                                context.restore();
+                            }
+                        }
+                    }else{
+                        context.font = "bold 30px Arial";
+                        context.fillStyle="#f21202";
+                        context.fillText("Selamat anda berhasil menyelesaikan",140,300);
+                        context.fillText("Game Deadly Shooter",230,350);
+                        context.fillText("Skor Akhir : "+skor,290,400);
+                        canvas.addEventListener("mousedown", mousedn, true);
+                        function mousedn(e){
+                            clearInterval(intervalCanvas);
+                            intervalCanvas = setInterval(gambarkan2,20);
+                                bola.x = 400;
+                                bola.y = 580;
+			            }
+                    }
+                    counter++;
+                }
+                intervalCanvas;
+
             });
 
             $("#about-button").click(function() {
-                $("#menu-page").hide();
                 $("#about-page").show();
+                $("#canvas").hide();
+                $("#menu-page").hide();
             });
-
             $(".back-button").click(function() {
                 $("#about-page").hide();
-                $("#menu-page").show();
-                $("#menu-level-page").hide();
-            });
-
-            $("#exit-button").click(function() {
-                var playerName = $("#name-field").val() === "" ? "unnamed" : $("#name-field").val();
-                console.log(playerName + " scored " + $("#score-field").html());
-
-                var score = {
-                    points: $("#score-field").html(),
-                    name: playerName
-                };
-
-                var scores = JSON.parse(localStorage.getItem("scores"));
-
-                if (scores === null) {
-                    scores = [];
-                }
-
-                scores.push(score);
-                localStorage.setItem("scores", JSON.stringify(scores));
-
                 $("#canvas").hide();
-                $("#game-over-box").hide();
                 $("#menu-page").show();
             });
+
         });
     </script>
 </head>
@@ -389,25 +442,9 @@
                 Game ini sangat baik mahasiswa yang bosan dan merasa jomblo!
             </p>
         </div>
-        <div id="menu-level-page">
-            <h1>Deadly Shooter 2020</h1>
-            <ul>
-                <a id="level-1" href="#">Level 1</a>
-                <br>
-                <a id="level-2" href="#">Level 2</a>
-                <br><br>
-                <a class="back-button" href="#">Menu</a>
-            </ul>
-        </div>
         <canvas id="canvas" width="800" height="600">
             Your web browser does not support a canvas
         </canvas>
-        <div id="game-over-box">
-            <h1>Game Over</h1>
-            <p id="game-over-p">Score: <span id="score-field"></span></p>
-            <input type="text" id="name-field" name="name-field" placeholder="Your name" pattern="^[a-zA-Z]+$" />
-            <input type="button" id="exit-button" name="exit-button" value="Exit" />
-        </div>
     </div>
 </body>
 </html>
