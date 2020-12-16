@@ -398,6 +398,18 @@
                                 musuh2[i].keadaan = "tewas";
                                 sisaMusuh2--;                  
                             }
+                            
+                            if(i%2==0){
+                                musuh2[i].x -=0.7;
+                                if(musuh2[i].x <=20){
+                                    musuh2[i].x += 1;
+                                }
+                            }else{
+                                musuh2[i].x +=0.7;
+                                if(musuh2[i].x >=780){
+                                    musuh2[i].x -=0.7;
+                                }
+                            }
                         }
                     }
 
