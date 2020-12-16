@@ -172,14 +172,24 @@
                     if(e.keyCode == 39) RIGHT = false;
                 }
 
+                // variabel dalam membantu mengatur jarak keluar peluru
                 var fireRate = 15;
                 var counter = 0;
                 var fireRateMusuh = 30;
                 var counterMusuh = 0;
+
+                // nama halaman
+                var level1=1;
+                var level2=2;
+
+                //variabel pembantu cek sisa musuh
                 var sisaMusuh1 = jumlahBola;
                 var sisaMusuh2 = jumlahBola2;
+
+
                 var intervalCanvas = setInterval(gambarkan, 20);
 
+                //pengecekan jika musuh sudah lewat batas bawah canvas
                 function musuhLewat() {
                     for(i=1;i<=jumlahBola;i++){
                         if(musuh[i].y > 620){
@@ -190,8 +200,7 @@
                         
                     }
                 }
-                var level1=1;
-                var level2=2;
+                
 
                 /* -- penggambaran dinamis -- */
                 function gambarkan(){
@@ -263,7 +272,11 @@
                             context.fillStyle = musuh[i].warna;
                             context.fill();
                             context.restore();
+
+                            // gerakan musuh kebawah pada level 1
                             musuh[i].y += 1;
+
+                            //pengecekan tabrakan antara player dan musuh
                             jb1=euDist(bola,musuh[i]);
                             if(jb1<=(musuh[i].jarijari+bola.jarijari )){
                                 bola.darah--;
@@ -274,6 +287,7 @@
                         }
                     }
 
+                    //pengecekan semua kondisi jika player masih hidup
                     if(bola.darah > 0 && sisaMusuh1 > 0 && !musuhLewat()){
                         move();
                         /*--- Bagian peluru ---*/
@@ -295,6 +309,7 @@
                                 context.fill();
 
                                 /* -- Collision detection -- */
+                                //pengecekan jika peluru mengenai musuh
                                 shot=false;
                                 for(j=1;j<=7;j++){
                                     if(shot==false){
@@ -313,6 +328,7 @@
                             }
                         }
                     }
+                    //pengecekan jika player kalah
                     if(musuhLewat() || bola.darah == 0){
                         context.font = "bold 30px Arial";
                         context.fillStyle="#f21202";
@@ -327,7 +343,9 @@
                             $("#menu-page").show();
 			            }
                     
-                    }if(sisaMusuh1 == 0 ){
+                    }
+                    //pengecekan jika berhasil membunuh semua musuh dan pindah level 2
+                    if(sisaMusuh1 == 0 ){
                         context.font = "bold 30px Arial";
                         context.fillStyle="#f21202";
                         context.fillText("Klik To Next Level",270,350);
@@ -372,10 +390,10 @@
                         }
                         counterMusuh = 0
                     }
-
+                    //menggambar darah
                     var posisi = 760;
                     for(i=0;i<bola.darah;i++){
-                        context.drawImage(gambarHati, posisi, 15, 25, 25); //context.drawImage(objek_image,Xawal,Yawal,lebar,tinggi)
+                        context.drawImage(gambarHati, posisi, 15, 25, 25);
                         posisi-=35;
                     }  
 
@@ -428,6 +446,7 @@
                             context.fill();
                             context.restore();
 
+                            //gerak musuh
                             musuh2[i].x -= perpindahan;
                             if(musuh2[i].x <=20){
                                 perpindahan = -3;
@@ -436,6 +455,7 @@
                                 perpindahan = 3;
                             }
 
+                            //pengecekan jika player mengenai musuh
                             jb1=euDist(bola,musuh2[i]);
                             if(jb1<=(musuh2[i].jarijari+bola.jarijari )){
                                 bola.darah--;
@@ -448,9 +468,11 @@
 
                     }
 
+                    //pengecekan semua kondisi jika player masih hidup
                     if(sisaMusuh2 > 0 && bola.darah > 0){
                         move();
                         /*--- Bagian peluru ---*/
+                        //pengecekan peluru player
                         if(peluru.length>0){
                             for(i=0;i<peluru.length;i++){
                                 context.save();					
@@ -469,6 +491,7 @@
                                 context.fill();
 
                                 /* -- Collision detection -- */
+                                //pengecekan jika peluru mengenai musuh
                                 shot=false;
                                 for(j=1;j<=7;j++){
                                     if(shot==false){
@@ -487,6 +510,7 @@
                             }
                         }
 
+                        //pengecekan peluru musuh
                         if(peluru2.length>0){
                             for(i=0;i<peluru2.length;i++){
                                 context.save();					
@@ -505,6 +529,7 @@
                                 context.fill();
 
                                 /* -- Collision detection -- */
+                                //pengecekan jika peluru mengenai player
                                 shot=false;
                                 for(j=1;j<=7;j++){
                                     if(shot==false){
@@ -549,7 +574,7 @@
                     counterMusuh++;
                 }
                 intervalCanvas;
-
+                
             });
 
             $("#about-button").click(function() {
