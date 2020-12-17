@@ -175,7 +175,7 @@
                 // variabel dalam membantu mengatur jarak keluar peluru
                 var fireRate = 15;
                 var counter = 0;
-                var fireRateMusuh = 30;
+                var fireRateMusuh = 25;
                 var counterMusuh = 0;
 
                 // nama halaman
@@ -192,12 +192,13 @@
                 //pengecekan jika musuh sudah lewat batas bawah canvas
                 function musuhLewat() {
                     for(i=1;i<=jumlahBola;i++){
-                        if(musuh[i].y > 620){
-                            return true;
-                        }else{
-                            return false;
+                        if (musuh[i].keadaan == "hidup") {
+                            if(musuh[i].y > 620){
+                                return true;
+                            }else{
+                                return false;
+                            }
                         }
-                        
                     }
                 }
                 
@@ -288,7 +289,7 @@
                     }
 
                     //pengecekan semua kondisi jika player masih hidup
-                    if(bola.darah > 0 && sisaMusuh1 > 0 && !musuhLewat()){
+                    if(bola.darah > 0 && sisaMusuh1 > 0){
                         move();
                         /*--- Bagian peluru ---*/
                         if(peluru.length>0){
@@ -594,7 +595,7 @@
 <body>  
 
     <audio id="myAudio" autoplay loop>
-        <source src="musik.mp3" type="audio/mpeg">
+        <source src="musik.aac" type="audio/aac">
         Your browser does not support the audio element.
     </audio>
     <div id="wrapper">
